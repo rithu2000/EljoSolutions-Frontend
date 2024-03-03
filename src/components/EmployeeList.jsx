@@ -11,6 +11,7 @@ const EmployeeList = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [employeeDetails, setEmployeeDetails] = useState([]);
+    const [selectedDepartment, setSelectedDepartment] = useState(null);
 
     // useEffect to fetch employee details when the component mounts
     useEffect(() => {
@@ -76,11 +77,11 @@ const EmployeeList = () => {
     };
 
     return (
-        <div className='flex'>
-            <div className='mx-auto min-w-[70%] p-8'>
+        <div className='flex h-screen'>
+            <div className='mx-auto min-w-[70%] p-8 mt-10'>
                 {!loading
                     ?
-                    <div className='mt-10'>
+                    <>
                         <div className='flex justify-between'>
                             <div className=''>
                                 <h1 className='text-xl font-medium'>Employees</h1>
@@ -99,7 +100,22 @@ const EmployeeList = () => {
                                 </button>
                             </div>
                         </div>
-                        <table className="min-w-full border-gray-300 text-center items-center border rounded-md mt-5">
+                        <div className='text-right mt-10'>
+                            <label className='text-md font-medium'>Filter by Department: </label>
+                            <select
+                                onChange={(e) => setSelectedDepartment(e.target.value)}
+                                value={selectedDepartment || ''}
+                                className='px-3 py-2 bg-white text-gray-800 border rounded mt-2'>
+                                <option value=''>All Departments</option>
+                                {Array.from(new Set(employeeDetails.map((employee) => employee.department))).map((department) => (
+                                    <option key={department} value={department}>
+                                        {department}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className='overflow-x-auto'>
+                        <table className="min-w-full border-gray-300 text-center items-center border rounded-md mt-2">
                             <thead className='bg-slate-800 text-white'>
                                 <tr className='text-center'>
                                     <th className="py-2 px-4 border-b">Employee Code</th>
@@ -112,43 +128,45 @@ const EmployeeList = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {employeeDetails?.map((employee) => (
-                                    <tr className='text-center' key={employee.id}>
-                                        <td className="py-2 px-4 border-b">
-                                            {employee.employeeCode}
-                                        </td>
-                                        <td className="py-2 px-4 border-b">
-                                            {employee.firstName}
-                                        </td>
-                                        <td className="py-2 px-4 border-b">
-                                            {employee.lastName}
-                                        </td>
-                                        <td className="py-2 px-4 border-b">
-                                            {employee.emailId}
-                                        </td>
-                                        <td className="py-2 px-4 border-b">
-                                            {employee.contactNo}
-                                        </td>
-                                        <td className="py-2 px-4 border-b">
-                                            {employee.department}
-                                        </td>
-                                        <td className="py-2 px-4 border-b">
-                                            <button
-                                                onClick={() => handleEdit(employee.id)}
-                                                className='text-green-800 hover:text-black font-medium px-2 py-1'>
-                                                Edit
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(employee.id)}
-                                                className='text-red-800 hover:text-black font-medium px-2 py-1'>
-                                                Delete
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
+                                {employeeDetails?.filter((employee) => !selectedDepartment || employee.department === selectedDepartment)
+                                    .map((employee) => (
+                                        <tr className='text-center' key={employee.id}>
+                                            <td className="py-2 px-4 border-b">
+                                                {employee.employeeCode}
+                                            </td>
+                                            <td className="py-2 px-4 border-b">
+                                                {employee.firstName}
+                                            </td>
+                                            <td className="py-2 px-4 border-b">
+                                                {employee.lastName}
+                                            </td>
+                                            <td className="py-2 px-4 border-b">
+                                                {employee.emailId}
+                                            </td>
+                                            <td className="py-2 px-4 border-b">
+                                                {employee.contactNo}
+                                            </td>
+                                            <td className="py-2 px-4 border-b">
+                                                {employee.department}
+                                            </td>
+                                            <td className="py-2 px-4 border-b">
+                                                <button
+                                                    onClick={() => handleEdit(employee.id)}
+                                                    className='text-green-800 hover:text-black font-medium px-2 py-1'>
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(employee.id)}
+                                                    className='text-red-800 hover:text-black font-medium px-2 py-1'>
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
                             </tbody>
                         </table>
-                    </div>
+                        </div>
+                    </>
                     :
                     <LoadingSpinner />
                 }

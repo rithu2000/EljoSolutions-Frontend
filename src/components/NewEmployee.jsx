@@ -74,7 +74,7 @@ const NewEmployee = () => {
     };
 
     return (
-        <div className='flex'>
+        <div className='flex h-screen'>
             <div className='mx-auto p-8 mt-10'>
                 {!loading
                     ?

@@ -104,7 +104,7 @@ const EmployeeProfile = () => {
     };
 
     return (
-        <div className='flex min-h-[100vh]'>
+        <div className='flex h-screen'>
             <div className='mx-auto p-8'>
                 {!loading
                     ?
